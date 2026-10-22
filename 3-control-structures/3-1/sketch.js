@@ -1,3 +1,4 @@
+
 let playerX = 0;
 
 const PLAYER_SIZE = 60;
@@ -6,7 +7,7 @@ const MOVE_SPEED = 5;
 function setup() {
   const canvas = createCanvas(640, 480);
 
-  playerX = (width / 2) - (PLAYER_SIZE / 2);  // 画面中央から開始
+  playerX = (width / 2) - (PLAYER_SIZE / 2);
 }
 
 function draw() {
@@ -16,10 +17,23 @@ function draw() {
   background(235, 245, 255);
 
   if (keyIsDown(LEFT_ARROW)) {
-    playerX = playerX - MOVE_SPEED;
+    if (playerX > 0) {
+      playerX = playerX - MOVE_SPEED;
+    }
   }
+
   if (keyIsDown(RIGHT_ARROW)) {
-    playerX = playerX + MOVE_SPEED;
+    if (playerX < 580) {
+      playerX = playerX + MOVE_SPEED;
+    }
+  }
+
+  if (playerX <= 0) {
+    leftKeyText = 'これ以上左には行けません';
+  }
+
+  if (playerX >= 580) {
+    rightKeyText = 'これ以上右には行けません';
   }
 
   fill(70, 140, 230);
