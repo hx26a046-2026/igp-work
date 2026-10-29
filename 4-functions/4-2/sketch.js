@@ -1,14 +1,13 @@
+
 let playerImage_stand;
 let playerImage_death;
 let enemyImage;
 
-// preload() は画像などを事前に読み込むための関数
-// 読み込みが完了してから setup() が実行される
 function preload() {
-  // 画像の読み込み
-  playerImage_stand = loadImage('assets/player_stand.png'); // プレイヤー (立ち)
-  playerImage_death = loadImage('assets/player_death.png'); // プレイヤー (やられ)
-  enemyImage = loadImage('assets/enemy_walk1.png'); // 敵
+
+  playerImage_stand = loadImage('assets/player_stand.png');
+  playerImage_death = loadImage('assets/player_death.png');
+  enemyImage = loadImage('assets/enemy_walk1.png');
 }
 
 function setup() {
@@ -23,10 +22,17 @@ function draw() {
   const enemyX = mouseX;
   const enemyY = mouseY;
 
-  // TODO: 関数の使い方を処理やコメントから理解し、利用する
+
+  if (isHitEnemy(playerX, playerY, enemyX, enemyY)) {
+    drawPlayer(playerX, playerY, 'death');
+  } else {
+    drawPlayer(playerX, playerY, 'stand');
+  }
+
+
+  drawEnemy(enemyX, enemyY);
 }
 
-// プレイヤーの描画 (pose によって絵が変わる)
 function drawPlayer(x, y, pose) {
   let sprite;
   switch (pose) {
@@ -49,7 +55,7 @@ function drawEnemy(x, y) {
   image(enemyImage, x - 10, y - 26, enemyImageSize, enemyImageSize);
 }
 
-// プレイヤーが敵と接触しているかどうか
+
 function isHitEnemy(playerX, playerY, enemyX, enemyY) {
   const px = playerX + 10;
   const py = playerY + 5;
@@ -59,5 +65,9 @@ function isHitEnemy(playerX, playerY, enemyX, enemyY) {
   const ey = enemyY + 5;
   const ew = 36;
   const eh = 26;
-  return (px < ex + ew) && (px + pw > ex) && (py < ey + eh) && (py + ph > ey);
+
+  return (px < ex + ew) &&
+    (px + pw > ex) &&
+    (py < ey + eh) &&
+    (py + ph > ey);
 }
