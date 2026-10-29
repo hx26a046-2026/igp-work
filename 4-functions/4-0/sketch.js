@@ -1,3 +1,4 @@
+
 function setup() {
   createCanvas(640, 480);
 }
@@ -5,16 +6,17 @@ function setup() {
 function draw() {
   background(0, 0, 0);
 
-  // TODO: 以下のキャラクター描画処理を、自作関数 drawCharacter に移動する
-  const headSize = 40;
-  noStroke();
-  fill(255, 0, 0);
-  circle(100, 200, headSize);
-  rect(100 - (headSize / 2), 200 + (headSize / 2), headSize, headSize); // 体を頭と同じサイズ感で描画
-
-  // TODO: 自作した関数 drawCharacter を、好きな座標・好きな色で 3 回呼び出す
+  // キャラクターを3回描画する
+  drawCharacter(100, 100, 255, 0, 0); // 赤
+  drawCharacter(200, 200, 100, 255, 50); // 緑
+  drawCharacter(300, 300, 0, 0, 255); // 青
 }
 
-// TODO: 引数として x, y, r, g, b を持つ関数 "drawCharacter" を定義する
-//       x,y は頭の中心座標の指定、r,g,b はそれぞれ red/green/blue を意味し、塗り潰しの色の指定とする
-//       関数の中身は上記 draw() のキャラクター描画処理に準じるが、座標や色を指定している部分を引数に置き換える必要がある
+// キャラクターを描画する自作関数
+function drawCharacter(x, y, r, g, b) {
+  const headSize = 40;
+  noStroke();
+  fill(r, g, b);
+  circle(x, y, headSize);
+  rect(x - (headSize / 2), y + (headSize / 2), headSize, headSize);
+}
