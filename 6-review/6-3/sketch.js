@@ -7,17 +7,143 @@
 
 // preload() は画像などを事前に読み込むための関数 (p5.js から自動的に呼び出される)
 // 読み込みが完了してから setup() が実行される
+
+let player;
+let enemies = [];
+let gameOver = false;
+let survivalTime = 0;
+let startTime;
+
+
 function preload() {
 }
 
-// setup() は全体の初期化処理を行うための関数 (p5.js から自動的に呼び出される)
-// preload() の後、draw() の前に 1 度だけ実行される
+
 function setup() {
   createCanvas(640, 480);
+  startGame();
 }
 
-// draw() は毎フレームの処理を行うための関数 (p5.js から自動的に呼び出される)
-// デフォルトでは 1 秒間に約 60 回実行される
+function startGame() {
+  player = {
+    x: 320,
+    y: 240,
+    size: 30,
+    speed: 5
+  };
+
+  enemies = [];
+  gameOver = false;
+  survivalTime = 0;
+  startTime = millis();
+
+
+  for (let i = 0; i < 5; i++) {
+    enemies.push({
+      x: random(30, 610),
+      y: random(30, 450),
+      size: 25,
+      vx: random([-3, 3]),
+      vy: random([-3, 3])
+    });
+  }
+}
 function draw() {
-  background(0, 0, 0);
+  background(20, 20, 30);
+
+  if (!gameOver) {
+    survivalTime = (millis() - startTime) / 1000;
+
+    if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+      player.x -= player.speed;
+    }
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
+      player.x += player.speed;
+    }
+    if (keyIsDown(UP_ARROW) || keyIsDown(87)) {
+      player.y -= player.speed;
+    }
+    if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
+      player.y += player.speed;
+    }
+
+    player.x = constrain(
+      player.x,
+      player.size / 2,
+      width - player.size / 2
+    );
+
+    player.y = constrain(
+      player.y,
+      player.size / 2,
+      height - player.size / 2
+    );
+
+    for (let enemy of enemies) {
+      enemy.x += enemy.vx;
+      enemy.y += enemy.vy;
+
+      if (enemy.x < 0 || enemy.x > width) {
+        enemy.vx *= -1;
+      }
+      if (enemy.y < 0 || enemy.y > height) {
+        enemy.vy *= -1;
+      }
+
+      let d = dist(
+        player.x, player.y,
+        enemy.x, enemy.y
+      );
+
+      if (d < (player.size + enemy.size) / 2) {
+        gameOver = true;
+      }
+    }
+  }
+
+  fill(50, 150, 255);
+  noStroke();
+  circle(player.x, player.y, player.size);
+
+  for (let enemy of enemies) {
+    fill(255, 60, 60);
+    circle(enemy.x, enemy.y, enemy.size);
+  }
+
+  fill(255);
+  textSize(22);
+  textAlign(LEFT);
+  text(
+    "TIME : " + survivalTime.toFixed(1) + " s",
+    20, 35
+  );
+
+  if (gameOver) {
+    fill(0, 0, 0, 180);
+    rect(0, 0, width, height);
+
+    fill(255, 60, 60);
+    textAlign(CENTER);
+    textSize(48);
+    text("GAME OVER", width / 2, 200);
+
+    fill(255);
+    textSize(26);
+    text(
+      "TIME : " + survivalTime.toFixed(1) + " s",
+      width / 2, 260
+    );
+
+    textSize(18);
+    text(
+      "SPACE : RESTART",
+      width / 2, 310
+    );
+  }
+}
+
+function keyPressed() {
+  if (gameOver && keyCode === 32) {
+    startGame();
+  }
 }
